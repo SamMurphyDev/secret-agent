@@ -7,12 +7,13 @@ VERSION=$(shell echo $(IMG) | awk -F ':' '{print $$2}')
 # This will work on kube versions 1.16+. We want the CRD OpenAPI validation features in v1
 CRD_OPTIONS ?= "crd:crdVersions=v1"
 
-# Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
-ifeq (,$(shell go env GOBIN))
+
+# if GOBIN isn't set find the path, otherwise use GOBIN
+ifeq ($(GOBIN),)
 GOBIN=$(shell go env GOPATH)/bin
-else
-GOBIN=$(shell go env GOBIN)
 endif
+
+GO=$(GOBIN)/go
 
 all: manager
 
@@ -27,26 +28,26 @@ test tests: int-test
 
 # Run unit tests
 unit-test: generate fmt vet manifests
-	go test ./... -coverprofile cover.html
+	$(GO) test ./... -coverprofile cover.html
 
 # Run unit and integration tests
 int-test: generate fmt vet manifests
-	go test ./... -tags=integration -coverprofile cover.html
+	$(GO) test ./... -tags=integration -coverprofile cover.html
 
 # Run unit and integration and cloudprovider tests
 cloud-test: generate fmt vet manifests
-	go test ./... -tags=integration,cloudprovider -coverprofile cover.html
+	$(GO) test ./... -tags=integration,cloudprovider -coverprofile cover.html
 
 # Build manager binary
 manager: generate fmt vet
-	go build -o bin/manager main.go
+	$(GO) build -o bin/manager main.go
 
 # debug
 debug: generate fmt vet manifests
-	dlv debug -- ./main.go --debug
+	dlv debug -- ./main.$(GO) --debug
 # Run against the configured Kubernetes cluster in ~/.kube/config
 run: generate fmt vet manifests
-	go run ./main.go
+	$(GO) run ./main.go
 
 # Install CRDs into a cluster
 install: manifests
@@ -71,13 +72,14 @@ manifests: controller-gen
 	# Remove "caBuncle: Cg==" from the webhook config. controller-gen generates the manifests with a placeholder
 	awk '!/caBundle:/' config/webhook/manifests.yaml > t && mv t config/webhook/manifests.yaml
 
-# Run go fmt against code
+# Run $(GO) fmt against code
 fmt:
-	go fmt ./...
+	$(GO) fmt ./...
 
-# Run go vet against code
+# Run $(GO) vet against code
 vet:
-	go vet ./...
+	$(GO) version
+	$(GO) vet ./...
 
 # Generate code
 generate: controller-gen
@@ -99,11 +101,11 @@ ifeq (, $(shell which controller-gen))
 	set -e ;\
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$CONTROLLER_GEN_TMP_DIR ;\
-	go mod init tmp ;\
-	go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.2.5 ;\
+	$(GO) mod init tmp ;\
+	$(GO) get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.6.1 ;\
 	rm -rf $$CONTROLLER_GEN_TMP_DIR ;\
 	}
-CONTROLLER_GEN=$(GOBIN)/controller-gen
+CONTROLLER_GEN=$(GO)/controller-gen
 else
 CONTROLLER_GEN=$(shell which controller-gen)
 endif
