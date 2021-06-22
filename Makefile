@@ -13,7 +13,7 @@ ifeq ($(GOBIN),)
 GOBIN=$(shell go env GOROOT)/bin
 endif
 
-GO=$(go env GOROOT)/bin/go
+GO=$(shell go env GOROOT)/bin/go
 
 all: manager
 
