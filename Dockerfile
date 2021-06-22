@@ -1,8 +1,8 @@
 # For building forgerock/secret-agent:tagname
 
 # Global build arguments
-ARG GO_VERSION="1.14.4"
-ARG GO_PACKAGE_SHA256="aed845e4185a0b2a3c3d5e1d0a35491702c55889192bb9c30e67a3de6849c067"
+ARG GO_VERSION="1.16.5"
+ARG GO_PACKAGE_SHA256="7bfa7e5908c7cc9e75da5ddf3066d7cbcf3fd9fa51945851325eebc17f50ba80"
 ARG KUBEBUILDER_VERSION="2.3.1"
 
 FROM openjdk:11-jre-slim as tester
@@ -11,7 +11,7 @@ ARG GO_VERSION
 ARG GO_PACKAGE_SHA256
 ARG KUBEBUILDER_VERSION
 
-ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64 DEBIAN_FRONTEND=noninteractive 
+ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64 DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install --no-install-recommends -y curl git-core make && \
     apt-get clean all
@@ -61,9 +61,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -ldflags "-s -
 
 FROM openjdk:11-jre-slim as release
 
-RUN apt-get update && \                                                                               
-    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y curl lsof net-tools && \ 
-    apt-get clean all                                                                                 
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y curl lsof net-tools && \
+    apt-get clean all
 RUN addgroup --gid 11111 secret-agent && \
     adduser --shell /bin/bash --home /home/secret-agent --uid 11111 --disabled-password --ingroup root --gecos secret-agent secret-agent && \
     chown -R secret-agent:root /home/secret-agent

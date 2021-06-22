@@ -1,6 +1,6 @@
 module github.com/ForgeRock/secret-agent
 
-go 1.13
+go 1.16
 
 require (
 	cloud.google.com/go v0.57.0
