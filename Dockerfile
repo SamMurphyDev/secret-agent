@@ -3,7 +3,7 @@
 # Global build arguments
 ARG GO_VERSION="1.16.5"
 ARG GO_PACKAGE_SHA256="b12c23023b68de22f74c0524f10b753e7b08b1504cb7e417eccebdd3fae49061"
-ARG KUBEBUILDER_VERSION="3.0.1"
+ARG KUBEBUILDER_VERSION="3.1.0"
 
 FROM openjdk:11-jre-slim as tester
 
@@ -24,8 +24,8 @@ RUN curl -LO https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz && \
     mv go /usr/local && \
     rm go${GO_VERSION}.linux-amd64.tar.gz
 
-RUN curl -L https://go.kubebuilder.io/dl/${KUBEBUILDER_VERSION}/${GOOS}/${GOARCH} | tar -xz -C /tmp/ && \
-    mv /tmp/kubebuilder_${KUBEBUILDER_VERSION}_${GOOS}_${GOARCH} /usr/local/kubebuilder
+RUN curl -L -o kubebuilder https://go.kubebuilder.io/dl/${KUBEBUILDER_VERSION}/$(go env GOOS)/$(go env GOARCH) && \
+    install kubebuilder /usr/local/kubebuilder
 
 ENV PATH="/usr/local/go/bin:${PATH}:/usr/local/kubebuilder/bin" GOPATH="/root/go"
 WORKDIR /root/go/src/github.com/ForgeRock/secret-agent
