@@ -27,7 +27,7 @@ RUN curl -LO https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz && \
 RUN curl -L -o kubebuilder https://go.kubebuilder.io/dl/${KUBEBUILDER_VERSION}/$(go env GOOS)/$(go env GOARCH) && \
     install kubebuilder /usr/local/kubebuilder
 
-ENV PATH="/usr/local/go/bin:${PATH}:/usr/local/kubebuilder/bin" GOPATH="/root/go"
+ENV PATH="/usr/local/go/bin:${PATH}:/usr/local/kubebuilder/bin" GOPATH="/root/go" GOBIN="/root/go/bin"
 WORKDIR /root/go/src/github.com/ForgeRock/secret-agent
 
 CMD ["bash"]
