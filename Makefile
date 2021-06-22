@@ -10,7 +10,7 @@ CRD_OPTIONS ?= "crd:crdVersions=v1"
 
 # if GOBIN isn't set find the path, otherwise use GOBIN
 ifeq ($(GOBIN),)
-GOBIN=$(shell go env GOPATH)/bin
+GOBIN=$(shell go env GOROOT)/bin
 endif
 
 GO=$(GOBIN)/go
