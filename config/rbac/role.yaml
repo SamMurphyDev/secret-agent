@@ -1,49 +1,48 @@
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   creationTimestamp: null
   name: manager-role
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - mutatingwebhookconfigurations
-  - validatingwebhookconfigurations
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - secret-agent.secrets.forgerock.io
-  resources:
-  - secretagentconfigurations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - secret-agent.secrets.forgerock.io
-  resources:
-  - secretagentconfigurations/status
-  verbs:
-  - get
-  - patch
-  - update
+  - apiGroups:
+      - ''
+    resources:
+      - secrets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+      - validatingwebhookconfigurations
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - secret-agent.secrets.forgerock.io
+    resources:
+      - secretagentconfigurations
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - secret-agent.secrets.forgerock.io
+    resources:
+      - secretagentconfigurations/status
+    verbs:
+      - get
+      - patch
+      - update
